@@ -1,0 +1,142 @@
+/* ============================
+   逆水寒攻略组 - 全局样式
+   设计方向：简洁、柔滑、微动效
+   ============================ */
+
+/* --- CSS 变量：统一管理主题 --- */
+:root {
+  --color-bg: #f8f7f4;
+  --color-surface: #ffffff;
+  --color-border: #e8e5e0;
+  --color-text: #2c2c2c;
+  --color-text-muted: #999;
+  --color-accent: #8b5e3c;       /* 古风棕金 */
+  --color-accent-light: #c9a87c;
+  --color-header-bg: #1a1a1a;
+  --color-header-text: #e0dcd5;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+  --shadow-hover: 0 2px 8px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.05);
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- 全局重置 --- */
+*,
+*::before,
+*::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+body {
+  font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+a { color: inherit; text-decoration: none; }
+
+button {
+  cursor: pointer; border: none; background: none;
+  font-family: inherit; font-size: inherit;
+}
+
+/* --- 页面进入动画 --- */
+.page-enter-active {
+  animation: fadeSlideIn var(--transition-smooth) both;
+}
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* --- 通用卡片样式 --- */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow var(--transition-fast);
+}
+.card:hover { box-shadow: var(--shadow-hover); }
+
+/* --- 通用按钮 --- */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 22px; border-radius: var(--radius-sm);
+  font-size: 14px; font-weight: 500;
+  transition: all var(--transition-fast);
+  border: 1px solid transparent;
+}
+.btn-primary {
+  background: var(--color-accent); color: #fff;
+}
+.btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.btn-outline {
+  border-color: var(--color-border); color: var(--color-text);
+  background: var(--color-surface);
+}
+.btn-outline:hover { border-color: var(--color-accent); color: var(--color-accent); }
+.btn-ghost {
+  color: var(--color-text-muted);
+}
+.btn-ghost:hover { color: var(--color-text); background: rgba(0,0,0,0.03); }
+
+/* --- 滑动容器（可滚动区域） --- */
+.scroll-area {
+  overflow-x: auto; overflow-y: auto;
+  scroll-behavior: smooth;
+  /* 柔边滚动：使用渐变遮罩 */
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%);
+}
+
+/* --- 柔边效果工具类 --- */
+.soft-edges {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+/* --- 微动效 hover 抬升 --- */
+.lift-on-hover {
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+.lift-on-hover:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* --- 文件上传区域 --- */
+.upload-zone {
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 48px 24px; text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-smooth);
+  background: var(--color-surface);
+}
+.upload-zone:hover,
+.upload-zone.dragover {
+  border-color: var(--color-accent);
+  background: rgba(139, 94, 60, 0.03);
+  transform: scale(1.01);
+}
+
+/* --- 标签/徽章 --- */
+.tag {
+  display: inline-flex; align-items: center;
+  padding: 3px 12px; border-radius: 100px;
+  font-size: 12px; border: 1px solid var(--color-border);
+  transition: all var(--transition-fast);
+  user-select: none;
+}
+
+/* --- 滚动条美化 --- */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-thumb { background: #d0ccc5; border-radius: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
