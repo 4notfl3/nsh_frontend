@@ -1,24 +1,24 @@
 /* ============================
    逆水寒攻略组 - 全局样式
-   设计方向：简洁、柔滑、微动效
+   设计方向：暗色、水墨、微动效
    ============================ */
 
-/* --- CSS 变量：统一管理主题 --- */
+/* --- CSS 变量 --- */
 :root {
-  --color-bg: #f8f7f4;
-  --color-surface: #ffffff;
-  --color-border: #e8e5e0;
-  --color-text: #2c2c2c;
-  --color-text-muted: #999;
-  --color-accent: #8b5e3c;       /* 古风棕金 */
-  --color-accent-light: #c9a87c;
-  --color-header-bg: #1a1a1a;
+  --color-bg: #0c1119;
+  --color-surface: rgba(255,255,255,0.06);
+  --color-border: rgba(255,255,255,0.08);
+  --color-text: #e0dcd5;
+  --color-text-muted: rgba(255,255,255,0.45);
+  --color-accent: #c9a87c;
+  --color-accent-light: #e0cba0;
+  --color-header-bg: rgba(10,14,22,0.75);
   --color-header-text: #e0dcd5;
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
-  --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
-  --shadow-hover: 0 2px 8px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.05);
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --shadow-card: 0 2px 12px rgba(0,0,0,0.3);
+  --shadow-hover: 0 4px 24px rgba(0,0,0,0.5);
   --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-smooth: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -46,15 +46,12 @@ button {
 }
 
 /* --- 页面进入动画 --- */
-.page-enter-active {
-  animation: fadeSlideIn var(--transition-smooth) both;
-}
 @keyframes fadeSlideIn {
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* --- 通用卡片样式 --- */
+/* --- 通用卡片 --- */
 .card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -62,6 +59,7 @@ button {
   padding: 24px;
   box-shadow: var(--shadow-card);
   transition: box-shadow var(--transition-fast);
+  backdrop-filter: blur(6px);
 }
 .card:hover { box-shadow: var(--shadow-hover); }
 
@@ -74,35 +72,27 @@ button {
   border: 1px solid transparent;
 }
 .btn-primary {
-  background: var(--color-accent); color: #fff;
+  background: var(--color-accent); color: #1a1a1a;
 }
 .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
 .btn-outline {
   border-color: var(--color-border); color: var(--color-text);
-  background: var(--color-surface);
+  background: transparent;
 }
 .btn-outline:hover { border-color: var(--color-accent); color: var(--color-accent); }
-.btn-ghost {
-  color: var(--color-text-muted);
-}
-.btn-ghost:hover { color: var(--color-text); background: rgba(0,0,0,0.03); }
 
-/* --- 滑动容器（可滚动区域） --- */
-.scroll-area {
-  overflow-x: auto; overflow-y: auto;
-  scroll-behavior: smooth;
-  /* 柔边滚动：使用渐变遮罩 */
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%);
-  mask-image: linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%);
-}
+/* --- 滚动条 --- */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
 
-/* --- 柔边效果工具类 --- */
+/* --- 柔边 --- */
 .soft-edges {
   border-radius: var(--radius-md);
   overflow: hidden;
 }
 
-/* --- 微动效 hover 抬升 --- */
+/* --- hover 抬升 --- */
 .lift-on-hover {
   transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
@@ -110,33 +100,3 @@ button {
   transform: translateY(-3px);
   box-shadow: var(--shadow-hover);
 }
-
-/* --- 文件上传区域 --- */
-.upload-zone {
-  border: 2px dashed var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: 48px 24px; text-align: center;
-  cursor: pointer;
-  transition: all var(--transition-smooth);
-  background: var(--color-surface);
-}
-.upload-zone:hover,
-.upload-zone.dragover {
-  border-color: var(--color-accent);
-  background: rgba(139, 94, 60, 0.03);
-  transform: scale(1.01);
-}
-
-/* --- 标签/徽章 --- */
-.tag {
-  display: inline-flex; align-items: center;
-  padding: 3px 12px; border-radius: 100px;
-  font-size: 12px; border: 1px solid var(--color-border);
-  transition: all var(--transition-fast);
-  user-select: none;
-}
-
-/* --- 滚动条美化 --- */
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-thumb { background: #d0ccc5; border-radius: 10px; }
-::-webkit-scrollbar-track { background: transparent; }

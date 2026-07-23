@@ -1,30 +1,52 @@
 /**
  * 用户状态
- * 预留：登录态、角色信息、偏好设置
- * 后续对接后端时在此扩展
+ * 管理登录态、用户信息，与 localStorage 双向同步
  */
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useUserStore = defineStore('user', () => {
+  // --- 初始化：从 localStorage 恢复登录态 ---
+  const savedToken = localStorage.getItem('token') || ''
+  const savedUser = (() => {
+    try {
+      const raw = localStorage.getItem('user')
+      return raw ? JSON.parse(raw) : null
+    } catch {
+      return null
+    }
+  })()
+
   // --- 状态 ---
-  const token = ref('')
-  const nickname = ref('')
-  const role = ref('')  // 游戏角色名
+  const token = ref(savedToken)
+  const nickname = ref(savedUser?.username || '')
+  const role = ref(savedUser?.role || '')
+  const userId = ref(savedUser?.id ?? null)
 
   // --- 计算 ---
   const isLoggedIn = computed(() => !!token.value)
+  const isGuest = computed(() => role.value === 'guest')
 
   // --- 操作 ---
-  function login(t: string, name: string) {
+  function login(t: string, userInfo: { id: number; username: string; role: string }) {
     token.value = t
-    nickname.value = name
+    nickname.value = userInfo.username
+    role.value = userInfo.role
+    userId.value = userInfo.id
+
+    localStorage.setItem('token', t)
+    localStorage.setItem('user', JSON.stringify(userInfo))
   }
+
   function logout() {
     token.value = ''
     nickname.value = ''
     role.value = ''
+    userId.value = null
+
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
   }
 
-  return { token, nickname, role, isLoggedIn, login, logout }
+  return { token, nickname, role, userId, isLoggedIn, isGuest, login, logout }
 })

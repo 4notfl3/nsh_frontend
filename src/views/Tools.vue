@@ -4,14 +4,14 @@
 -->
 <template>
   <div class="page-placeholder">
-    <div class="placeholder-icon">🔧</div>
+    <div class="placeholder-icon"></div>
     <h2>工具</h2>
     <p>实用工具集合</p>
 
     <!-- 工具列表 -->
     <div class="tool-list">
       <router-link to="/tools/viz" class="tool-card lift-on-hover">
-        <span class="tool-icon">📊</span>
+        <span class="tool-icon"></span>
         <div>
           <h4>数据可视化</h4>
           <span class="tool-desc">上传 CSV 分析帮战数据</span>

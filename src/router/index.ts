@@ -11,21 +11,27 @@ import type { RouteRecordRaw } from 'vue-router'
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
+    name: 'login',
+    component: () => import('@/views/Login.vue'),
+    meta: { title: '登录', layout: 'blank' },
+  },
+  {
+    path: '/home',
     name: 'Home',
     component: () => import('@/views/Home.vue'),
-    meta: { title: '主页', icon: '⚔', showInNav: true },
+    meta: { title: '主页', icon: '', showInNav: true },
   },
   {
     path: '/guild',
     name: 'Guild',
     component: () => import('@/views/Guild.vue'),
-    meta: { title: '帮会', icon: '🏠', showInNav: true },
+    meta: { title: '帮会', icon: '', showInNav: true },
   },
   {
     path: '/tools',
     name: 'Tools',
     component: () => import('@/views/Tools.vue'),
-    meta: { title: '工具', icon: '🔧', showInNav: true },
+    meta: { title: '工具', icon: '', showInNav: true },
   },
   {
     path: '/tools/viz',

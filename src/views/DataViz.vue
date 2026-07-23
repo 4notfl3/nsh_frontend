@@ -173,11 +173,10 @@ import type { RawPlayer, NormalizedPlayer, MatchRawData, ClassGroups } from '@/u
 // ==================== 常量 ====================
 const RADAR_METRICS = [
   { key: 'totalKills', label: '击败/清泉' }, { key: 'assists', label: '助攻' },
-  { key: 'playerDmg', label: '对玩家伤害' }, { key: 'playerDmgArmor', label: '人伤卸甲' },
-  { key: 'buildingDmg', label: '对建筑伤害' }, { key: 'buildingDmgArmor', label: '破塔卸甲' },
+  { key: 'playerDmg', label: '对玩家伤害' },
+  { key: 'buildingDmg', label: '对建筑伤害' },
   { key: 'healing', label: '治疗值' }, { key: 'takenDmg', label: '承受伤害' },
   { key: 'deaths', label: '重伤' }, { key: 'revives', label: '复活/清泉' },
-  { key: 'boneBurn', label: '焚骨' },
 ] as const
 
 /** 柱状图可切换的指标 */
@@ -524,24 +523,27 @@ function renderBar() {
           : fmtNum(v.value)
         return '<strong>' + v.name + '</strong> (' + (p?.class || '') + ')<br/>'
           + met!.label + ': <strong>' + valStr + '</strong>'
-          + (isSel ? '<br/><span style="color:#999">✅ 雷达图中</span>' : '')
+          + (isSel ? '<br/><span style="color:var(--color-accent-light)">已选入雷达图</span>' : '')
       },
     },
-    grid: { left: 12, right: 40, top: 20, bottom: 130, containLabel: true },
+    grid: { left: 80, right: 24, top: 20, bottom: 50, containLabel: true },
     xAxis: {
       type: 'category', data: sorted.map(p => p.name),
-      axisLabel: { color: '#888', fontSize: 9, rotate: 30, interval: 0 },
-      axisLine: { lineStyle: { color: '#ddd' } }, axisTick: { show: false },
+      axisLabel: { color: 'rgba(255,255,255,0.45)', fontSize: 10, rotate: -40, interval: 0 },
+      axisLine: { lineStyle: { color: 'rgba(255,255,255,0.08)' } },
+      axisTick: { show: false },
     },
     yAxis: {
       type: 'value', name: met!.label,
-      nameTextStyle: { color: '#888', fontSize: 11 },
-      axisLabel: { color: '#aaa', fontSize: 10, formatter: fmtNum },
-      splitLine: { lineStyle: { color: '#eee', type: 'dashed' } }, axisLine: { show: false },
+      nameTextStyle: { color: 'rgba(255,255,255,0.45)', fontSize: 11 },
+      axisLabel: { color: 'rgba(255,255,255,0.4)', fontSize: 10, formatter: fmtNum },
+      splitLine: { lineStyle: { color: 'rgba(255,255,255,0.06)', type: 'dashed' } },
+      axisLine: { show: false },
     },
     series: [{
       type: 'bar',
       data: sorted.map(p => ({
+        name: p.name,
         value: (p as any)[barMetric.value] as number,
         itemStyle: {
           color: CLASS_COLORS[p.class] || '#999',
@@ -549,7 +551,7 @@ function renderBar() {
           opacity: selectedPlayers.has(p.name) ? 1 : 0.6,
         },
       })),
-      barMaxWidth: 36,
+      barMaxWidth: 48,
     }],
   })
 }
@@ -568,6 +570,10 @@ function onResize() {
 </script>
 
 <style scoped>
+/* ===== DataViz 专用颜色（不透明，对抗背景图） ===== */
+.dv-card-bg { background: rgba(20,26,40,0.92); }
+.dv-panel-bg { background: rgba(18,24,36,0.95); }
+
 .dataviz { max-width: 1280px; margin: 0 auto; padding: 32px 24px 60px; }
 
 /* 页头 */
@@ -578,20 +584,22 @@ function onResize() {
 /* 上传区 */
 .upload-zone {
   position: relative; margin-bottom: 28px;
-  border: 2px dashed var(--color-border); border-radius: var(--radius-lg);
+  border: 2px dashed rgba(255,255,255,0.12); border-radius: var(--radius-lg);
   padding: 48px 24px; text-align: center; cursor: pointer;
-  transition: all var(--transition-smooth); background: var(--color-surface);
+  transition: all var(--transition-smooth);
+  background: rgba(20,26,40,0.9);
+  backdrop-filter: blur(4px);
 }
 .upload-zone:hover,
 .upload-zone.dragover {
   border-color: var(--color-accent);
-  background: rgba(139,94,60,0.03);
+  background: rgba(30,36,50,0.95);
   transform: scale(1.01);
 }
 .uz-icon { font-size: 48px; margin-bottom: 12px; filter: grayscale(1); }
 .uz-text { font-size: 16px; color: var(--color-text-muted); }
-.uz-hint { font-size: 13px; color: #bbb; margin-top: 8px; }
-.file-info { margin-top: 16px; color: #555; font-size: 14px; }
+.uz-hint { font-size: 13px; color: rgba(255,255,255,0.35); margin-top: 8px; }
+.file-info { margin-top: 16px; color: var(--color-accent-light); font-size: 14px; }
 
 /* ===== 两边阵营概况对比 ===== */
 .vs-summary { display: flex; gap: 24px; margin-bottom: 28px; }
@@ -603,19 +611,20 @@ function onResize() {
 .vs-cards { display: flex; gap: 10px; flex-wrap: wrap; }
 .vs-card {
   flex: 1; min-width: 80px; text-align: center;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: rgba(20,26,40,0.9);
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: var(--radius-sm);
   padding: 14px 12px;
   transition: all var(--transition-fast);
+  backdrop-filter: blur(4px);
 }
-.vs-card:hover { box-shadow: var(--shadow-hover); }
+.vs-card:hover { box-shadow: var(--shadow-hover); border-color: rgba(255,255,255,0.15); }
 .vs-card.clickable {
-  cursor: pointer; border-color: var(--color-accent-light);
+  cursor: pointer; border-color: rgba(201,168,124,0.3);
   transition: all var(--transition-fast);
 }
 .vs-card.clickable:hover {
-  background: rgba(139,94,60,0.04);
+  background: rgba(201,168,124,0.1);
   transform: translateY(-2px);
   border-color: var(--color-accent);
 }
@@ -626,89 +635,98 @@ function onResize() {
 .controls {
   display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
   margin-bottom: 24px; padding: 14px 20px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: rgba(20,26,40,0.9);
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: var(--radius-md);
+  backdrop-filter: blur(4px);
 }
 .controls label { font-size: 13px; color: var(--color-text-muted); white-space: nowrap; }
 .controls select {
-  padding: 6px 12px; border: 1px solid var(--color-border);
+  padding: 6px 12px; border: 1px solid rgba(255,255,255,0.12);
   border-radius: var(--radius-sm); font-size: 13px; font-family: inherit;
-  background: var(--color-bg); color: var(--color-text); cursor: pointer;
+  background: rgba(10,14,22,0.8); color: var(--color-text); cursor: pointer;
   max-width: 160px;
 }
 .tab-btn {
-  padding: 6px 16px; border: 1px solid var(--color-border);
-  background: var(--color-bg); color: var(--color-text-muted);
+  padding: 6px 16px; border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(10,14,22,0.8); color: var(--color-text-muted);
   border-radius: var(--radius-sm); font-size: 13px;
   transition: all var(--transition-fast);
 }
 .tab-btn:hover { border-color: var(--color-accent); color: var(--color-accent); }
-.tab-btn.active { background: var(--color-accent); color: #fff; border-color: var(--color-accent); }
+.tab-btn.active { background: var(--color-accent); color: #1a1a1a; border-color: var(--color-accent); }
 
 /* 图表区 */
 .charts-area { display: flex; flex-direction: column; gap: 24px; }
-.chart-section h2 { font-size: 17px; margin-bottom: 4px; }
+.chart-section {
+  background: rgba(20,26,40,0.9);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  backdrop-filter: blur(4px);
+}
+.chart-section h2 { font-size: 17px; margin-bottom: 4px; color: var(--color-text); }
 .chart-section .subtitle { font-size: 13px; color: var(--color-text-muted); margin-bottom: 16px; }
-.chart-box { width: 100%; height: 440px; }
+.chart-box { width: 100%; height: 520px; }
 .chart-box.tall { height: 540px; }
 .no-data-hint {
-  text-align: center; color: #bbb; padding: 40px 0; font-size: 14px;
+  text-align: center; color: var(--color-text-muted); padding: 40px 0; font-size: 14px;
 }
-
 
 /* 指标按钮 */
 .metric-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
 .metric-btn {
-  padding: 5px 12px; border: 1px solid var(--color-border);
-  background: var(--color-bg); color: var(--color-text-muted);
+  padding: 5px 12px; border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(10,14,22,0.8); color: var(--color-text-muted);
   border-radius: 6px; font-size: 12px;
   transition: all var(--transition-fast);
 }
 .metric-btn:hover { border-color: var(--color-accent); color: var(--color-accent); }
-.metric-btn.active { background: var(--color-accent); color: #fff; border-color: var(--color-accent); }
+.metric-btn.active { background: var(--color-accent); color: #1a1a1a; border-color: var(--color-accent); }
 
 /* 职业图例 */
 .class-legend {
   display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;
-  padding: 14px 0 0; border-top: 1px solid var(--color-border); margin-top: 12px;
+  padding: 14px 0 0; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 12px;
 }
-.legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #888; }
+.legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--color-text-muted); }
 .legend-dot { display: inline-block; width: 12px; height: 12px; border-radius: 3px; }
 
 /* 空状态 */
-.empty-state { text-align: center; padding: 80px 20px; color: #bbb; }
+.empty-state { text-align: center; padding: 80px 20px; color: var(--color-text-muted); }
 .empty-state .icon { font-size: 64px; margin-bottom: 16px; filter: grayscale(1); }
 .empty-state p { font-size: 16px; }
 
 /* ===== 职业分布弹窗 ===== */
 .modal-overlay {
   position: fixed; inset: 0; z-index: 1000;
-  background: rgba(0,0,0,0.32); backdrop-filter: blur(4px);
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(6px);
   display: flex; align-items: center; justify-content: center;
   animation: fadeIn 0.2s ease both;
 }
 .modal-card {
-  background: var(--color-surface);
+  background: rgba(20,26,40,0.96);
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: var(--radius-lg);
   padding: 28px 32px 24px;
   min-width: 420px; max-width: 560px; max-height: 80vh;
   overflow-y: auto;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  backdrop-filter: blur(8px);
   animation: scaleIn 0.25s ease both;
 }
 .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.modal-header h3 { font-size: 18px; }
+.modal-header h3 { font-size: 18px; color: var(--color-text); }
 .modal-close {
   width: 32px; height: 32px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 16px; color: #999; transition: all var(--transition-fast);
+  font-size: 16px; color: rgba(255,255,255,0.5); transition: all var(--transition-fast);
 }
-.modal-close:hover { background: #f0f0f0; color: #333; }
+.modal-close:hover { background: rgba(255,255,255,0.08); color: #fff; }
 
 .class-table { width: 100%; border-collapse: collapse; font-size: 14px; }
 .class-table th,
-.class-table td { padding: 8px 14px; text-align: center; border-bottom: 1px solid var(--color-border); }
+.class-table td { padding: 8px 14px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08); }
 .class-table th { font-size: 13px; color: var(--color-text-muted); font-weight: 600; }
 .class-table td { color: var(--color-text); }
 .class-table .total-row td { border-bottom: none; padding-top: 14px; }
@@ -737,7 +755,7 @@ function onResize() {
   padding: 6px 16px; border-radius: 100px;
   font-size: 13px; font-weight: 500; cursor: pointer; user-select: none;
   border: 1.5px solid;
-  background: #fafafa;
+  background: rgba(255,255,255,0.06);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .player-tag::before {
@@ -747,13 +765,13 @@ function onResize() {
 }
 .player-tag:hover {
   transform: translateY(-2px);
-  box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 3px 12px rgba(0,0,0,0.3);
 }
 .player-tag.on {
   color: #fff !important;
   background: var(--tag-bg, #999);
   border-color: var(--tag-bg, #999);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
   transform: translateY(-1px);
 }
 .player-tag.on::before { background: rgba(255,255,255,0.7); }
