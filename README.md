@@ -96,3 +96,8 @@ npm run preview
 - **柔滑动效**：页面切换动画、hover 微交互、平滑过渡
 - **模块解耦**：视图 / 状态 / API 分层清晰，便于后期对接后端
 - **易于扩展**：导航栏由路由配置驱动，新增页面零配置
+
+## 后端仓库
+
+[nsh_backend](https://github.com/4notfl3/nsh_Backend)
+ 
