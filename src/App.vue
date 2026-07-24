@@ -5,8 +5,8 @@
     默认           → 暗色背景 + Header + 内容 + Footer
 -->
 <template>
-  <!-- 默认布局：暗色背景 + 毛玻璃导航 -->
-  <div v-if="showLayout" class="app-shell">
+  <!-- 默认布局 & 沉浸式布局：暗色背景轮播 -->
+  <div v-if="showLayout || isImmersive" class="app-shell">
     <!-- 背景图片轮播：把图放进 public/img/，在下面 bgImages 数组里加路径即可 -->
     <div class="app-bg">
       <div
@@ -18,24 +18,16 @@
       ></div>
     </div>
     <div class="app-overlay"></div>
-    <Header />
-    <main class="main-content">
-      <router-view v-slot="{ Component }">
-        <transition name="page" mode="out-in">
-          <component :is="Component" />
-        </transition>
-      </router-view>
+    <Header v-if="showLayout" />
+    <main class="main-content" :class="{ 'main-content--full': isImmersive }">
+      <router-view />
     </main>
-    <Footer />
+    <Footer v-if="showLayout" />
   </div>
 
   <!-- 空白布局：仅渲染页面（登录页自带背景） -->
   <div v-else class="app-blank">
-    <router-view v-slot="{ Component }">
-      <transition name="page" mode="out-in">
-        <component :is="Component" />
-      </transition>
-    </router-view>
+    <router-view />
   </div>
 </template>
 
@@ -46,7 +38,8 @@ import Header from '@/components/layout/Header.vue'
 import Footer from '@/components/layout/Footer.vue'
 
 const route = useRoute()
-const showLayout = computed(() => route.meta.layout !== 'blank')
+const showLayout = computed(() => route.meta.layout !== 'blank' && route.meta.layout !== 'immersive')
+const isImmersive = computed(() => route.meta.layout === 'immersive')
 
 // 背景图片轮播：把图片放进 public/img/ 目录，比如 public/img/师姐1.jpg，
 // 这里就写 '/img/师姐1.jpg'。想放几张放几张。
@@ -126,6 +119,12 @@ onUnmounted(() => {
   z-index: 1;
   min-height: calc(100vh - 64px - 70px);
   padding-bottom: 40px;
+}
+
+/* 沉浸式布局：无 Header/Footer，撑满全屏 */
+.main-content--full {
+  min-height: 100vh;
+  padding-bottom: 0;
 }
 
 /* 页面切换动画 */

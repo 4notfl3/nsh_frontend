@@ -28,6 +28,12 @@ const routes: RouteRecordRaw[] = [
     meta: { title: '帮会', icon: '', showInNav: true },
   },
   {
+    path: '/guild/:id',
+    name: 'GuildDetail',
+    component: () => import('@/views/GuildDetail.vue'),
+    meta: { title: '帮会详情', showInNav: false, layout: 'immersive' },
+  },
+  {
     path: '/tools',
     name: 'Tools',
     component: () => import('@/views/Tools.vue'),

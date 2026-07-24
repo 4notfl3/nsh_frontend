@@ -86,6 +86,14 @@ button {
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 10px; }
 ::-webkit-scrollbar-track { background: transparent; }
 
+/* --- 亚克力毛玻璃卡片（文字展示区专用，背景不透明 + 强模糊） --- */
+.card-acrylic {
+  background: rgba(10, 15, 24, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(201, 168, 124, 0.12);
+}
+
 /* --- 柔边 --- */
 .soft-edges {
   border-radius: var(--radius-md);
