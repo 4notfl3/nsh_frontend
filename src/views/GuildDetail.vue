@@ -14,6 +14,11 @@
   <div v-else class="detail-wrapper">
     <div class="detail-bg-layer" :style="{ backgroundImage: 'url(' + heroBg + ')' }"></div>
     <div class="detail-bg-overlay"></div>
+
+    <!-- 右上角隐藏退出按钮 -->
+    <div class="exit-tab" @mouseenter="exitShow = true" @mouseleave="exitShow = false">
+      <router-link to="/guild" class="exit-btn" :class="{ show: exitShow }">✕ 退出</router-link>
+    </div>
     <div ref="shellRef" class="detail-shell">
     <div class="scroll-inner">
       <!-- Block 0: 人物合影 -->
@@ -69,6 +74,7 @@ const loading = ref(true)
 const selectedMember = ref<Member | null>(null)
 const showMemberPopup = ref(false)
 const heroBg = ref('/img/女儿壁纸.png')
+const exitShow = ref(false)
 const onUpdateBg = (bg: string) => { heroBg.value = bg }
 
 const shellRef = ref<HTMLElement | null>(null)
@@ -123,6 +129,30 @@ onUnmounted(() => observer?.disconnect())
 
 <style scoped>
 .detail-wrapper { position: relative; }
+
+/* 右上角隐藏退出 */
+.exit-tab {
+  position: fixed; top: 0; right: 0; z-index: 60;
+  width: 60px; height: 40px;
+  display: flex; align-items: flex-start; justify-content: flex-end;
+}
+.exit-btn {
+  padding: 5px 14px; border-radius: 0 0 0 10px;
+  background: rgba(15,20,30,0.4); backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.04); border-top: none; border-right: none;
+  color: transparent; font-size: 12px; white-space: nowrap;
+  text-decoration: none; letter-spacing: 1px;
+  transition: all 0.3s ease;
+  transform: translateX(calc(100% - 12px));
+  pointer-events: none;
+}
+.exit-btn.show {
+  color: rgba(255,255,255,0.6);
+  background: rgba(15,20,30,0.7);
+  transform: translateX(0);
+  pointer-events: auto;
+}
+.exit-btn:hover { color: #f56c6c; background: rgba(20,12,12,0.85); }
 .detail-bg-layer {
   position: fixed; inset: 0; z-index: 1;
   background-color: #0a0e16; background-position: center;
@@ -131,7 +161,7 @@ onUnmounted(() => observer?.disconnect())
 }
 .detail-bg-overlay {
   position: fixed; inset: 0; z-index: 1;
-  background: linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.1) 45%, rgba(0,0,0,0.5) 100%);
+  background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.02) 45%, rgba(0,0,0,0.3) 100%);
   pointer-events: none;
 }
 

@@ -289,24 +289,20 @@ async function handleRegister() {
 
 /* 帮会卡片网格 */
 .guild-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex; flex-wrap: wrap; justify-content: center;
   gap: 24px;
+}
+.guild-grid > * {
+  width: calc((100% - 48px) / 3);
+  min-width: 280px; max-width: 380px;
 }
 
 @media (max-width: 960px) {
-  .guild-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  .guild-grid > * { width: calc((100% - 24px) / 2); }
 }
-
 @media (max-width: 640px) {
-  .guild-grid {
-    grid-template-columns: 1fr;
-  }
-  .page-title {
-    font-size: 28px;
-  }
+  .guild-grid > * { width: 100%; }
+  .page-title { font-size: 28px; }
 }
 
 /* --- 注册弹窗 --- */

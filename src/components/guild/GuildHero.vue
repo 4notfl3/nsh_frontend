@@ -44,12 +44,14 @@
     <!-- 选中角色信息（左侧文字） -->
     <div v-if="selectedMember" class="hero-info">
       <h1 class="hero-name">{{ selectedMember.name }}</h1>
+      <p class="hero-title-text">{{ selectedMember.title }}</p>
       <div class="hero-quotes">
         <div class="quote-col" v-for="(col, ci) in quoteCols" :key="ci"
-          :style="{ paddingTop: ci * 24 + 'px' }">
+          :style="{ paddingTop: ci % 2 === 0 ? '0' : '20px' }">
           <span v-for="(ch, chi) in col" :key="chi" class="quote-char">{{ ch }}</span>
         </div>
       </div>
+      <p class="hero-intro">{{ selectedMember.intro }}</p>
     </div>
 
     <!-- 帮会名（未选角色时显示） -->
@@ -74,7 +76,7 @@ import type { Guild, Member } from '@/mock/guild'
 const props = defineProps<{ guild: Guild }>()
 const emit = defineEmits<{ updateBg: [bg: string] }>()
 
-const BG_DEFAULT = '/img/女儿壁纸.png'
+const BG_DEFAULT = '/banghui/攻略组卡片背景.jpg'
 
 const panelOpen = ref(false)
 const selectedMember = ref<Member | null>(null)
@@ -85,16 +87,10 @@ const currentBgs = computed(() => selectedMember.value?.bgImages?.length
   ? selectedMember.value.bgImages
   : [BG_DEFAULT])
 
-// 竖排语录：按每列最多 6 个字拆分
+// 竖排语录：每段 quote 就是一列，不拆开
 const quoteCols = computed(() => {
   const quotes = selectedMember.value?.quotes || []
-  const all = quotes.join('')
-  const cols: string[][] = []
-  const perCol = 5
-  for (let i = 0; i < all.length; i += perCol) {
-    cols.push(all.slice(i, i + perCol).split(''))
-  }
-  return cols.length > 1 ? cols.slice(0, 4) : cols // 最多 4 列
+  return quotes.map(q => q.split(''))
 })
 
 // 更新轮播（未选则默认图，选了则循环角色图）
@@ -138,7 +134,7 @@ onUnmounted(() => clearInterval(carouselTimer))
 .hero-bg.active { opacity: 1; }
 .hero-bg-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 40%, rgba(0,0,0,0.5) 100%);
+  background: linear-gradient(135deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.05) 40%, rgba(0,0,0,0.3) 100%);
 }
 
 /* ====== 左侧触发区 ====== */
@@ -181,11 +177,21 @@ onUnmounted(() => clearInterval(carouselTimer))
 .panel-slide-enter-from, .panel-slide-leave-to { transform: translateX(-100%); }
 
 /* ====== 左侧文字信息 ====== */
-.hero-info { position: absolute; left: 0; top: 0; z-index: 10; padding: 48px 0 0 40px; display: flex; flex-direction: column; pointer-events: none; }
+.hero-info { position: absolute; inset: 0; z-index: 10; padding: 48px 0 48px 40px; display: flex; flex-direction: column; pointer-events: none; }
 .hero-name {
   font-size: 56px; font-weight: 900; color: #fff;
   letter-spacing: 12px; text-shadow: 0 4px 20px rgba(0,0,0,0.6);
-  writing-mode: horizontal-tb; margin-bottom: 32px;
+  margin-bottom: 4px;
+}
+.hero-title-text {
+  font-size: 15px; color: var(--color-accent-light);
+  letter-spacing: 4px; margin-bottom: 28px;
+}
+.hero-intro {
+  margin-top: auto;
+  font-size: 23px; color: rgba(255,255,255,0.45);
+  max-width: 320px; line-height: 1.7;
+  letter-spacing: 1px;
 }
 .hero-quotes { display: flex; gap: 8px; }
 .quote-col { display: flex; flex-direction: column; gap: 4px; }

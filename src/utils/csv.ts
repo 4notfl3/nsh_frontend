@@ -66,7 +66,7 @@ export function parseCSV(text: string): MatchRawData {
 
   while (i < lines.length) {
     // 匹配对局头："对局名","人数"
-    const headerMatch = lines[i]!.match(/^"(.+?)","(\d+)"$/)
+    const headerMatch = lines[i]!.match(/^"([^"]+)","(\d+)"$/)
     if (!headerMatch) { i++; continue }
 
     const matchName = headerMatch[1]!

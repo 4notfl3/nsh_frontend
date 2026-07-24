@@ -6,8 +6,8 @@
 <template>
   <router-link :to="`/guild/${guild.id}`" class="guild-card card card-acrylic lift-on-hover">
     <!-- 头图 -->
-    <div class="card-banner">
-      <img :src="guild.logo" :alt="guild.name" class="card-logo" loading="lazy" />
+    <div class="card-banner" :style="{ backgroundImage: 'url(' + guild.backgroundImage + ')'}">
+
       <div class="card-member-count">
         <span class="count-num">{{ guild.members?.length ?? guild.memberCount }}</span>
         <span class="count-label">成员</span>
@@ -55,26 +55,14 @@ const truncatedDesc = computed(() => {
 
 .card-banner {
   position: relative;
-  aspect-ratio: 16 / 9;
-  background: linear-gradient(135deg, rgba(201, 168, 124, 0.15), rgba(201, 168, 124, 0.03));
-  display: flex;
+    aspect-ratio: 16 / 9;
+    background-color: rgba(201, 168, 124, 0.1);
+    background-position: center;
+    background-size: cover;
+    display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-}
-
-.card-logo {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid rgba(201, 168, 124, 0.4);
-  box-shadow: 0 0 20px rgba(201, 168, 124, 0.15);
-  transition: transform var(--transition-smooth);
-}
-
-.guild-card:hover .card-logo {
-  transform: scale(1.08);
 }
 
 .card-member-count {
@@ -107,7 +95,7 @@ const truncatedDesc = computed(() => {
 }
 
 .card-name {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
   color: var(--color-text);
   margin-bottom: 4px;
